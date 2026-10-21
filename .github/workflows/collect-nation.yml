@@ -1,0 +1,46 @@
+name: collect-nation
+
+on:
+  schedule:
+    - cron: "7 1 * * *"   # 10:07 KST — 시각 무관(분석용), 다른 수집과 겹치지 않게
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: "실행 시간(분). 과거 채우기가 끝나면 하루 몇 분이면 충분"
+        default: "80"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    concurrency: nation
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: collect
+        env:
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+        run: |
+          set -o pipefail
+          mkdir -p logs
+          export CALL_LIMIT=90000 STOP_AT=$(( $(date +%s) + ${{ inputs.minutes || 80 }} * 60 ))
+          python collect_nation.py 2>&1 | sed "s/${DATA_GO_KR_KEY}/***/g" | tee logs/nation.txt || echo "::warning::collect_nation.py 비정상 종료"
+      - name: commit
+        if: always()
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add logs data 2>/dev/null || true
+          git diff --cached --quiet && exit 0
+          git commit -m "nation: $(TZ=Asia/Seoul date +%F_%H%M)"
+          for i in 1 2 3; do
+            git pull --rebase -X theirs && git push && exit 0
+            sleep 15
+          done
+          exit 1
