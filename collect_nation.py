@@ -4,11 +4,11 @@
 업체 위치(사정률 %, analysis/position.py와 같은 계산)만 압축해 둔다. 강원 수집분(data/YYYY-MM/)과 겹치는 공고는 건너뜀.
   data/nation/YYYY-MM/bids.csv     공고 목록 원문 + 요약(B·A·하한율·예가범위·실제 사정률·1순위 검증)
   data/nation/YYYY-MM/prices.csv   복수예가 15개 (실제 사정률 분포용)
-  data/nation/pos/YYYYMMDD_HHMM.csv.gz  공고별 업체 위치 목록 (실행마다 새 파일 — git 이력 부담 줄임)
+  data/nation/pos/YYYYMMDD_HHMMSS_구간.csv.gz  공고별 업체 위치 목록 (구간마다 새 파일 — git 이력 부담 줄임)
 매 실행: 최근 3일 + 과거를 1주씩 거꾸로 (data/nation/cursor.txt, 하한 2024-01-01). 공고 4건 동시 조회.
 """
 import csv, gzip, os, sys, time
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import CancelledError, ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from pathlib import Path
 import collect as C
@@ -66,6 +66,14 @@ def summarize(b, comp, prices, A, rate):
     return row, (" ".join(f"{x - 100:.3f}" for x in p["pos"]) if p else None)
 
 
+def save_pos(rows, tag):
+    """공고별 위치 목록을 구간마다 바로 파일로 (중간에 끊겨도 bids.csv에 저장된 공고의 위치가 사라지지 않게)"""
+    if not rows: return
+    d = NATION / "pos"; d.mkdir(exist_ok=True)
+    with gzip.open(d / f"{datetime.now(C.KST):%Y%m%d_%H%M%S}_{tag}.csv.gz", "wt", encoding="utf-8", newline="") as f:
+        w = csv.writer(f); w.writerow(["bidNtceNo", "bidNtceOrd", "pos"]); w.writerows(rows)
+
+
 def window(start, end, label, have, pos_rows):
     rows = C.call("getOpengResultListInfoCnstwkPPSSrch", inqryDiv=2, indstrytyCd="0037",
                   inqryBgnDt=start.strftime("%Y%m%d0000"), inqryEndDt=end.strftime("%Y%m%d2359"))
@@ -77,21 +85,24 @@ def window(start, end, label, have, pos_rows):
             try:
                 r = f.result()
                 if r: out.append(r)
+            except CancelledError:   # 마감 후 취소한 대기 작업
+                continue
             except C.Budget as e:
                 stop = stop or e
             except RuntimeError as e:   # 한 건 오류는 건너뜀 (지난 구간은 다시 조회하지 않음)
                 print("오류:", str(e)[:120])
             if stop:
                 for g in fs: g.cancel()
-    by_m = {}
+    by_m, mine = {}, []
     for b, comp, prices, A, rate in out:
         m = (b.get("opengDt") or start.strftime("%Y-%m"))[:7]
         row, pos = summarize(b, comp, prices, A, rate)
         d = by_m.setdefault(m, dict(bids=[], prices=[]))
         d["bids"].append(row)
         d["prices"] += [{k: x.get(k, "") for k in PRICE_COLS} for x in prices]
-        if pos: pos_rows.append((b["bidNtceNo"], b.get("bidNtceOrd", "000"), pos))
+        if pos: mine.append((b["bidNtceNo"], b.get("bidNtceOrd", "000"), pos))
         have.add((b["bidNtceNo"], b.get("bidNtceOrd", "000")))
+    save_pos(mine, f"{start:%Y%m%d}"); pos_rows += mine   # 위치를 bids.csv보다 먼저 저장
     for m, d in by_m.items():
         sub = f"nation/{m}"
         C.save(sub, "prices", d["prices"], ["bidNtceNo", "bidNtceOrd", "compnoRsrvtnPrceSno"])
@@ -119,10 +130,6 @@ def main():
         print(f"마감 시각 도달 ({C.calls}회). 다음 실행에서 이어서." if time.time() >= C.STOP_AT else f"호출 한도 도달 ({C.calls}회). 다음 실행에서 이어서.")
     except RuntimeError as e:
         print("오류:", e)
-    if pos_rows:
-        d = NATION / "pos"; d.mkdir(exist_ok=True)
-        with gzip.open(d / f"{datetime.now(C.KST):%Y%m%d_%H%M}.csv.gz", "wt", encoding="utf-8", newline="") as f:
-            w = csv.writer(f); w.writerow(["bidNtceNo", "bidNtceOrd", "pos"]); w.writerows(pos_rows)
     print(f"총 호출 {C.calls}회 / 위치 저장 {len(pos_rows)}건 / 과거 진행 위치: {CURSOR.read_text().strip() if CURSOR.exists() else '-'}")
 
 
