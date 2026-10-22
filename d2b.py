@@ -5,6 +5,7 @@
 import os, time
 import xml.etree.ElementTree as ET
 import requests
+import net
 
 KEY = os.environ.get("DATA_GO_KR_KEY", "")
 PB = "https://apis.data.go.kr/1690000/BidPblancInfoService"
@@ -18,14 +19,13 @@ def get(base, op, **p):
     global calls
     out, page = [], 1
     while True:
-        for i in range(3):
+        for i in range(6):
             try:
                 calls += 1
                 r = requests.get(f"{base}/{op}", params={"serviceKey": KEY, "pageNo": page, "numOfRows": 999, **p}, timeout=40)
                 root = ET.fromstring(r.content); break
             except Exception as e:
-                if i == 2: raise RuntimeError(f"{op} 실패: {type(e).__name__}")   # 메시지에 인증키 URL이 들어가므로 종류만
-                time.sleep(3)
+                if not net.retry(i, e): raise RuntimeError(f"{op} 실패: {type(e).__name__}")   # 메시지에 인증키 URL이 들어가므로 종류만
         if root.findtext(".//returnReasonCode"):   # 한도 초과 등 게이트웨이 오류 (OpenAPI_ServiceResponse)
             raise RuntimeError(f"{op} 오류 {root.findtext('.//returnReasonCode')} {root.findtext('.//returnAuthMsg') or root.findtext('.//errMsg')}")
         code = root.findtext(".//resultCode")

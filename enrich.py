@@ -4,6 +4,7 @@
   - 공고 목록 API(getBidPblancListInfoCnstwk): 낙찰하한율 sucsfbidLwltRate ("-" = 조회했으나 없음, 재시도 안 함)
 """
 import csv, os, time, requests
+import net
 from pathlib import Path
 KEY = os.environ["DATA_GO_KR_KEY"]
 B = "https://apis.data.go.kr/1230000/ad/BidPublicInfoService"
@@ -13,13 +14,12 @@ STOP_AT = float(os.environ.get("STOP_AT") or "inf")   # 이 시각(epoch)이 지
 A_FIELDS = ("npnInsrprm", "mrfnHealthInsrprm", "rtrfundNon", "odsnLngtrmrcprInsrprm", "sftyMngcst", "sftyChckMngcst", "qltyMngcst")
 
 def get(op, **p):
-    for i in range(3):
+    for i in range(6):
         try:
             r = requests.get(f"{B}/{op}", params={"serviceKey": KEY, "type": "json", "pageNo": 1, "numOfRows": 10, **p}, timeout=30)
             j = r.json(); break
-        except Exception:
-            if i == 2: raise
-            time.sleep(3)
+        except Exception as e:
+            if not net.retry(i, e): raise
     err = (j.get("OpenAPI_ServiceResponse") or {}).get("cmmMsgHeader")
     if err: raise RuntimeError(f"{op} 오류 {err.get('returnReasonCode')} {err.get('returnAuthMsg') or err.get('errMsg')}")
     hdr = j.get("response", {}).get("header", {})
