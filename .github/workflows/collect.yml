@@ -1,10 +1,7 @@
 name: collect
 
 on:
-  schedule:   # 예비용 — 정시 실행은 cron-job.org가 workflow_dispatch(auto=true)로 호출. 시각만 여기서 바꾸면 됨 — 실행 종류는 시작 시각(KST)으로 판단 (02~06시 정규 / 13~16시 오후 / 22~23시 밤)
-    - cron: "17 18 * * *"   # 03:17 KST 정규 수집 (호출 수 기준, ~2시간 → 07:40 추천 전에 끝남)
-    - cron: "3 5 * * *"     # 14:03 KST 오후 추가 수집 (16:35 마감) → 16:47 오후 추천에 그날 개찰결과 반영
-    - cron: "3 14 * * *"    # 23:03 KST 밤 추가 수집 (23:55 마감)
+  # 03:17 정규 · 14:03 오후 · 23:03 밤 — cron-job.org가 workflow_dispatch(auto=true)로 호출. 실행 종류는 시작 시각(KST)으로 판단. GitHub 예약은 늦게 와서 삭제(2026-10-22)
   workflow_dispatch:
     inputs:
       days:
