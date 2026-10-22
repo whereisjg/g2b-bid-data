@@ -16,6 +16,7 @@ import argparse, csv, json, os, sys, time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import requests
+import net
 
 BASE = "https://apis.data.go.kr/1230000/as/ScsbidInfoService"
 KEY = os.environ.get("DATA_GO_KR_KEY", "")
@@ -45,7 +46,7 @@ def call(op, base=BASE, **params):
         if calls >= DAILY_LIMIT - SAFETY or time.time() >= STOP_AT:
             raise Budget()
         r = None
-        for i in range(3):
+        for i in range(6):
             try:
                 calls += 1
                 r = requests.get(f"{base}/{op}", params=p, timeout=30)
@@ -53,9 +54,8 @@ def call(op, base=BASE, **params):
                 j = r.json()
                 break
             except Exception as e:
-                if i == 2:
+                if not net.retry(i, e):
                     raise RuntimeError(f"{op} 실패: {e} / {r.text[:300] if r is not None else ''}")
-                time.sleep(3)
         err = (j.get("OpenAPI_ServiceResponse") or {}).get("cmmMsgHeader")
         if err: raise RuntimeError(f"{op} 오류 {err.get('returnReasonCode')} {err.get('returnAuthMsg') or err.get('errMsg')}")
         hdr = j.get("response", {}).get("header", {})
