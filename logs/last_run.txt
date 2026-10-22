@@ -1,4 +1,2 @@
-[일일] 2026-10-20~2026-10-22: 대상 16건 → 공고 16 / 투찰 3136 / 예가 180 (누적 호출 35)
-[재수집] 참가업체·예가가 비어 있던 최근 14일 공고 5건 다시 조회 → 0건 채움 (누적 호출 45)
-일일 호출 한도 도달 (320회). 다음 실행에서 이어서 수집.
-총 호출 320회 / 과거 진행 위치: 2026-04-21
+오류: getOpengResultListInfoCnstwk 실패: HTTPSConnectionPool(host='apis.data.go.kr', port=443): Max retries exceeded with url: /1230000/as/ScsbidInfoService/getOpengResultListInfoCnstwk?serviceKey=***&type=json&pageNo=1&numOfRows=999&inqryDiv=1&inqryBgnDt=202610190000&inqryEndDt=202610222359 (Caused by ConnectTimeoutError(<HTTPSConnection(host='apis.data.go.kr', port=443) at 0x7f767e787050>, 'Connection to apis.data.go.kr timed out. (connect timeout=30)')) / 
+총 호출 6회 / 과거 진행 위치: 2026-03-17
