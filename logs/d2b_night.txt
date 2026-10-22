@@ -1,0 +1,2 @@
+오류: getFcltyCmpetBidPblancList 실패: ConnectTimeout
+총 호출 6회 / 과거 진행 위치: 2025-07-01

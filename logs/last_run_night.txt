@@ -1,0 +1,2 @@
+오류: getOpengResultListInfoCnstwk 실패: HTTPSConnectionPool(host='apis.data.go.kr', port=443): Max retries exceeded with url: /1230000/as/ScsbidInfoService/getOpengResultListInfoCnstwk?serviceKey=***&type=json&pageNo=1&numOfRows=999&inqryDiv=1&inqryBgnDt=202610190000&inqryEndDt=202610222359 (Caused by ConnectTimeoutError(<HTTPSConnection(host='apis.data.go.kr', port=443) at 0x7f8478877260>, 'Connection to apis.data.go.kr timed out. (connect timeout=30)')) / 
+총 호출 6회 / 과거 진행 위치: 2026-03-17
