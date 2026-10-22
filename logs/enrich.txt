@@ -1,8 +1,3 @@
-공고정보 미보유(A값 또는 하한율) 공고 113 건
-오류 R26BK01587504 ConnectTimeout
-오류 R26BK01590747 ConnectTimeout
-오류 R26BK01590798 ConnectTimeout
-오류 R26BK01587573 ConnectTimeout
-오류 R26BK01565192 ConnectTimeout
-연속 오류 5회, 중단
-저장 0 건 / 호출 5
+공고정보 미보유(A값 또는 하한율) 공고 1736 건
+한도 도달, 다음 실행에서 이어서
+저장 1500 건 / 호출 3000
