@@ -5,7 +5,7 @@
   data/nation/YYYY-MM/bids.csv     공고 목록 원문 + 요약(B·A·하한율·예가범위·실제 사정률·1순위 검증)
   data/nation/YYYY-MM/prices.csv   복수예가 15개 (실제 사정률 분포용)
   data/nation/pos/YYYYMMDD_HHMMSS_구간.csv.gz  공고별 업체 위치 목록 (구간마다 새 파일 — git 이력 부담 줄임)
-매 실행: 최근 3일 + 과거를 1주씩 거꾸로 (data/nation/cursor.txt, 하한 = 최근 365일). 공고 4건 동시 조회.
+매 실행: 최근 3일 + 과거를 1주씩 거꾸로 (data/nation/cursor.txt, 하한 2024-01-01). 공고 4건 동시 조회.
 """
 import csv, gzip, os, sys, time
 from concurrent.futures import CancelledError, ThreadPoolExecutor, as_completed

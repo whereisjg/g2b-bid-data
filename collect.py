@@ -2,7 +2,7 @@
 
 매 실행마다:
   1) 최근 N일 개찰분 수집 (매일 결과)
-  2) 남은 호출 한도로 과거 데이터를 1주 단위로 거꾸로 채움 (BACKFILL_UNTIL = 최근 365일까지)
+  2) 남은 호출 한도로 과거 데이터를 1주 단위로 거꾸로 채움 (BACKFILL_UNTIL까지)
 저장: data/YYYY-MM/{bids,bidders,prices}.csv (개찰월 기준 분할)
 
 사용:
@@ -24,7 +24,7 @@ DATA = Path(__file__).parent / "data"
 CURSOR = DATA / "backfill_cursor.txt"   # 과거 채우기 진행 위치 (이 날짜 이전을 아직 미수집)
 
 REGION_WORDS = ["강원", "춘천"]          # 공고기관·수요기관명 포함 단어
-BACKFILL_UNTIL = (datetime.now() - timedelta(days=365)).replace(hour=0, minute=0, second=0, microsecond=0)   # 최근 365일만 (2026-10-23 사용자 결정, 그 이전은 수집·활용 안 함)
+BACKFILL_UNTIL = datetime(2024, 1, 1)    # 하한율 상향(2025-07) 전후 비교용으로 2024년부터
 DAILY_LIMIT = int(os.environ.get("CALL_LIMIT") or 3500)                       # 운영계정(기능별 하루 100,000회). 실행 시간 기준(~1.3초/회, 약 75분) — enrich·d2b와 합쳐 07:40 전에 끝나게
 SAFETY = 80                              # 한도 여유분
 STOP_AT = float(os.environ.get("STOP_AT") or "inf")   # 이 시각(epoch)이 지나면 중단 (추가 수집용)
