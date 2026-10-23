@@ -12,7 +12,7 @@ from collect import save
 DATA = Path(__file__).parent / "data"
 CURSOR = DATA / "d2b_cursor.txt"
 SEEN = DATA / "d2b_seen.txt"
-BACKFILL_UNTIL = datetime(2025, 7, 1)
+from collect import BACKFILL_UNTIL   # 최근 365일만
 LIMIT = int(os.environ.get("CALL_LIMIT") or 1500)   # 운영계정(2026-10-21). 실행 시간 기준
 
 STOP_AT = float(os.environ.get("STOP_AT") or "inf")   # 이 시각(epoch)이 지나면 중단 (추가 수집용)
