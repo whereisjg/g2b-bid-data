@@ -1,7 +1,9 @@
 name: collect
 
 on:
-  # 03:17 정규 · 14:03 오후 · 23:03 밤 — cron-job.org가 workflow_dispatch(auto=true)로 호출. 실행 종류는 시작 시각(KST)으로 판단. GitHub 예약은 늦게 와서 삭제(2026-10-22)
+  # 정해진 회차(정규·아침·오후·밤)는 cron-job.org가 workflow_dispatch(auto=true)로 호출 — 실행 종류는 시작 시각(KST)으로 판단
+  schedule:
+    - cron: "31 * * * *"   # 매시간 40분 짧은 수집 + 연결 기록(logs/net_health.csv): 어느 시간대에 data.go.kr이 막히는지 확인, 한 회차 실패해도 다음 시간에 보충 (2026-10-23)
   workflow_dispatch:
     inputs:
       days:
@@ -44,11 +46,27 @@ jobs:
             ARGS="--probe"
           fi
           # 예약 실행은 시작 시각(KST)으로 종류 판단: 정규는 호출 수 기준, 추가 수집은 마감 시각 기준(횟수 제한 없음)
-          NOW=$(date +%s); END=""; SUF=""
-          if [ "$EVENT" = "schedule" ] && [ -f logs/last_collect_at ] && [ $((NOW - $(cat logs/last_collect_at))) -lt 10800 ]; then
-            echo "최근 3시간 안에 수집이 이미 실행됨 — 늦게 온 예약 실행 건너뜀"; exit 0   # 정시 실행은 cron-job.org(auto=true), GitHub 예약은 예비
-          fi
-          if [ "$EVENT" = "schedule" ] || [ "$AUTO" = "true" ]; then
+          NOW=$(date +%s); END=""; SUF=""; S3=""
+          mkdir -p logs
+          # 연결 확인 1회 (KST 시각, 성공/실패, 걸린 초) → 실패면 이번 회차 생략 (재시도로 12분 버리지 않게)
+          H=$(python - <<'PY'
+          import os, time, requests
+          t = time.time()
+          try:
+              r = requests.get("https://apis.data.go.kr/1230000/as/ScsbidInfoService/getOpengResultListInfoCnstwk", timeout=20,
+                               params={"serviceKey": os.environ["DATA_GO_KR_KEY"], "type": "json", "numOfRows": 1, "inqryDiv": 1, "inqryBgnDt": "202610010000", "inqryEndDt": "202610012359"})
+              print("ok" if r.status_code == 200 else f"http{r.status_code}", round(time.time() - t, 1))
+          except Exception as e:
+              print(type(e).__name__, round(time.time() - t, 1))
+          PY
+          )
+          [ -f logs/net_health.csv ] || echo "kst,event,result,sec" > logs/net_health.csv
+          echo "$(TZ=Asia/Seoul date '+%F %H:%M'),$EVENT,$(echo $H | tr ' ' ',')" >> logs/net_health.csv
+          echo "연결 확인: $H"
+          if [ "${H%% *}" != "ok" ]; then echo "::warning::data.go.kr 연결 안 됨 ($H) — 이번 회차 생략"; exit 0; fi
+          if [ "$EVENT" = "schedule" ]; then
+            S3=$((NOW + 2400)); SUF="_hourly"   # 매시간: 40분만
+          elif [ "$AUTO" = "true" ]; then
             case "$(TZ=Asia/Seoul date +%H)" in
               02|03|04|08|09|10|11) ;;   # 정규 (호출 수 기준). 10/22·23 새벽·밤엔 data.go.kr 연결이 계속 시간 초과 → 08시대 권장
               05|06|07) END="07:35"; SUF="_morning" ;;   # 07:40 아침 추천 전에 그날 개찰결과 보충
@@ -57,15 +75,14 @@ jobs:
               *) echo "예약 시간대 밖에 시작됨 — 이번 수집 생략"; exit 0 ;;
             esac
           fi
-          S1=""; S2=""; S3=""
-          if [ -n "$END" ]; then
-            S3=$(TZ=Asia/Seoul date -d "today $END" +%s)
+          S1=""; S2=""
+          if [ -n "$END" ]; then S3=$(TZ=Asia/Seoul date -d "today $END" +%s); fi
+          if [ -n "$S3" ]; then
             if [ $((S3 - NOW)) -lt 600 ]; then echo "마감($END)까지 10분 미만 — 이번 추가 수집 생략"; exit 0; fi
             S1=$((NOW + (S3 - NOW) / 2)); S2=$((NOW + (S3 - NOW) * 3 / 4))   # 실제 시작 시각 기준: 개찰결과 1/2 · 하한율 1/4 · 군부대 1/4
             export CALL_LIMIT=${CALL_LIMIT:-90000}
             echo "추가 수집: 개찰결과 $(TZ=Asia/Seoul date -d @$S1 +%H:%M) / 하한율 $(TZ=Asia/Seoul date -d @$S2 +%H:%M) / 군부대 $END 마감"
           fi
-          mkdir -p logs
           MASK="s/${DATA_GO_KR_KEY}/***/g"
           STOP_AT=$S1 python collect.py $ARGS --days "${{ inputs.days || 3 }}" 2>&1 | sed "$MASK" | tee logs/last_run$SUF.txt || echo "::warning::collect.py 비정상 종료"
           if [ -z "$ARGS" ]; then STOP_AT=$S2 python enrich.py 2>&1 | sed "$MASK" | tee logs/enrich$SUF.txt || echo "::warning::enrich.py 비정상 종료"; fi
