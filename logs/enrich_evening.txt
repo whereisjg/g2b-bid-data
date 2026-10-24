@@ -1,3 +1,24 @@
-공고정보 미보유(A값 또는 하한율) 공고 1811 건
-마감 시각 도달, 다음 실행에서 이어서
-저장 1436 건 / 호출 2872
+공고정보 미보유(A값 또는 하한율) 공고 596 건
+오류 R25BK00877468 RuntimeError
+오류 R25BK00890328 RuntimeError
+오류 R25BK00879375 RuntimeError
+오류 R25BK00875344 RuntimeError
+오류 R25BK00875386 RuntimeError
+오류 R25BK00879622 RuntimeError
+오류 R25BK00879440 RuntimeError
+오류 R25BK00877750 RuntimeError
+오류 R25BK00879771 RuntimeError
+오류 R25BK00886650 RuntimeError
+오류 R25BK00874731 RuntimeError
+오류 R25BK00877569 RuntimeError
+오류 R25BK00872804 RuntimeError
+오류 R25BK00876176 RuntimeError
+오류 R25BK00875038 RuntimeError
+오류 R25BK00874886 RuntimeError
+오류 R25BK00872670 RuntimeError
+오류 R25BK00874891 RuntimeError
+오류 R25BK00874917 RuntimeError
+오류 R25BK00874489 RuntimeError
+오류 R25BK00877491 RuntimeError
+연속 오류 5회, 중단
+저장 31 건 / 호출 91
