@@ -12,3 +12,4 @@ kst,event,result,sec
 2026-10-25 02:32,schedule,ok,2.7
 2026-10-25 03:18,workflow_dispatch,ok,3.5
 2026-10-25 06:04,schedule,ok,2.8
+2026-10-25 08:32,schedule,ConnectTimeout,20.2
