@@ -22,4 +22,4 @@ kst,event,result,sec
 2026-10-26 10:30,schedule,ok,7.8
 2026-10-26 15:59,schedule,ok,4.5
 2026-10-26 23:44,schedule,ok,2.6
-2026-10-27 03:18,workflow_dispatch,ok,3.2
+2026-10-27 05:24,schedule,ok,2.6
