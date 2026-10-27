@@ -29,6 +29,8 @@ jobs:
     concurrency: collect
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}   # 대기열에서 기다린 실행도 최신 main으로 (기본값은 예약 시점 커밋 → 과거 채우기 위치가 되돌아가고 그 사이 수집분을 덮음, 2026-10-27)
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
