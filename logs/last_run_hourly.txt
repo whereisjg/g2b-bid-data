@@ -1,4 +1,9 @@
-[일일] 2026-10-27~2026-10-30: 대상 21건 → 공고 21 / 투찰 1751 / 예가 300 (누적 호출 46)
-[재수집] 참가업체·예가가 비어 있던 최근 14일 공고 4건 다시 조회 → 0건 채움 (누적 호출 54)
-과거 채우기 완료
-총 호출 54회 / 과거 진행 위치: 2024-01-01
+오류: getOpengResultListInfoCnstwk 실패: Expecting value: line 1 column 1 (char 0) / <!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ìì¤í ì ê² ìë´</title>
+    <link rel="stylesheet" href="/static/info/css/
+총 호출 3회 / 과거 진행 위치: 2024-01-01

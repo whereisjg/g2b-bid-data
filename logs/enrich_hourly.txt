@@ -1,2 +1,8 @@
-공고정보 미보유(A값 또는 하한율) 공고 21 건
-저장 21 건 / 호출 42
+공고정보 미보유(A값 또는 하한율) 공고 6 건
+오류 R26BK01785650 JSONDecodeError
+오류 R26BK01792083 JSONDecodeError
+오류 R26BK01784141 JSONDecodeError
+오류 R26BK01792168 JSONDecodeError
+오류 R26BK01780043 JSONDecodeError
+연속 오류 5회, 중단
+저장 0 건 / 호출 5
