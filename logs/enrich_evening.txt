@@ -1,2 +1,8 @@
-공고정보 미보유(A값 또는 하한율) 공고 15 건
-저장 15 건 / 호출 30
+공고정보 미보유(A값 또는 하한율) 공고 13 건
+오류 R26BK01785650 RuntimeError
+오류 R26BK01792083 RuntimeError
+오류 R26BK01784141 RuntimeError
+오류 R26BK01792168 RuntimeError
+오류 R26BK01780043 RuntimeError
+오류 R26BK01780145 RuntimeError
+저장 7 건 / 호출 22
