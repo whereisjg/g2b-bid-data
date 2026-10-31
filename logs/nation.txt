@@ -1,16 +1,9 @@
-[일일] 2026-10-27~2026-10-30 (개찰일 2026-10-27~2026-10-29): 목록 195 · 신규 58 → 저장 57 (누적 호출 252)
-Traceback (most recent call last):
-  File "/home/runner/work/g2b-bid-data/g2b-bid-data/collect_nation.py", line 137, in <module>
-    main()
-  File "/home/runner/work/g2b-bid-data/g2b-bid-data/collect_nation.py", line 125, in main
-    window(s, cur - timedelta(days=1), "과거", have, pos_rows)
-  File "/home/runner/work/g2b-bid-data/g2b-bid-data/collect_nation.py", line 99, in window
-    row, pos = summarize(b, comp, prices, A, rate)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/g2b-bid-data/g2b-bid-data/collect_nation.py", line 61, in summarize
-    p = M.positions(no, {no: prices}, {no: comp})
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/g2b-bid-data/g2b-bid-data/analysis/position.py", line 64, in positions
-    dev = max(abs(float(x["bsisPlnprc"]) / B - 1) for x in pr if x.get("bsisPlnprc")) * 100
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-ValueError: max() iterable argument is empty
+오류: getOpengResultListInfoCnstwkPPSSrch 실패: Expecting value: line 1 column 1 (char 0) / <!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ìì¤í ì ê² ìë´</title>
+    <link rel="stylesheet" href="/static/info/css/
+총 호출 3회 / 위치 저장 0건 / 과거 진행 위치: 2024-12-29
