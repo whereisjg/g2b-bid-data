@@ -1,10 +1,8 @@
-다가오는 공고 저장 실패: getBidPblancListInfoCnstwk 실패: 500 Server Error: Internal Server Error for url: https://apis.data.go.kr/1230000/ad/BidPublicInfoService/getBidPblancListInfoCnstwk?serviceKey=***&type=json&pageNo=1&numOfRows=999&inqryDiv=1&inqryBgnDt=202610100000&inqryEndDt=202610312305 / {
-  "OpenAPI_ServiceResponse": {
-    "cmmMsgHeader": {
-      "errMsg": "APPLICATION_ERROR",
-      "returnAuthMsg": "어플리케이션 에러",
-      "returnReasonCode": "01"
-    }
-  }
-}
-
+다가오는 공고 저장 실패: getBidPblancListInfoCnstwk 실패: Expecting value: line 1 column 1 (char 0) / <!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ìì¤í ì ê² ìë´</title>
+    <link rel="stylesheet" href="/static/info/css/
