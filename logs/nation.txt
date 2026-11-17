@@ -1,4 +1,4 @@
-[일일] 2026-11-13~2026-11-16 (개찰일 2026-11-13~2026-11-13): 목록 51 · 신규 1 → 저장 0 (누적 호출 3)
+[일일] 2026-11-14~2026-11-17 (개찰일 2026-11-16~2026-11-16): 목록 46 · 신규 44 → 저장 43 (누적 호출 189)
 Traceback (most recent call last):
   File "/home/runner/work/g2b-bid-data/g2b-bid-data/collect_nation.py", line 137, in <module>
     main()
