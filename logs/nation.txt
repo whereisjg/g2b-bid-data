@@ -1,4 +1,7 @@
-[일일] 2026-11-16~2026-11-19 (개찰일 2026-11-16~2026-11-18): 목록 222 · 신규 85 → 저장 83 (누적 호출 380)
+[일일] 2026-11-17~2026-11-20 (개찰일 2026-11-17~2026-11-19): 목록 257 · 신규 79 → 저장 78 (누적 호출 358)
+오류: getBidPblancListInfoCnstwkBsisAmount 실패: 500 Server Error: Internal Server Error for url: https://apis.data.go.kr/123000
+오류: getOpengResultListInfoOpengCompt 실패: 500 Server Error: Internal Server Error for url: https://apis.data.go.kr/1230000/as
+오류: getOpengResultListInfoOpengCompt 실패: 500 Server Error: Internal Server Error for url: https://apis.data.go.kr/1230000/as
 Traceback (most recent call last):
   File "/home/runner/work/g2b-bid-data/g2b-bid-data/collect_nation.py", line 137, in <module>
     main()
